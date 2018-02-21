@@ -1,4 +1,64 @@
 /* eslint no-console: OFF */
+
+class PrettyTable {
+  constructor(init) {
+    this.table = init;
+  }
+
+  getColumns() {
+    return Array.from(
+      new Set(
+        this.table.reduce((acl, curr) => acl.concat(Object.keys(curr)), [])
+      )
+    );
+  }
+
+  getPadConfig() {
+    return this.getColumns().reduce(
+      (acl, curr) =>
+        Object.assign({}, acl, {
+          [curr]: Math.max(
+            curr.length,
+            ...this.table.map(i => (i[curr] ? String(i[curr]).length : 0))
+          )
+        }),
+      {}
+    );
+  }
+
+  getHeader() {
+    const t = this.getColumns().map(i => i.padEnd(this.getPadConfig()[i]));
+    const lines = t.map(col => "═".repeat(col.length));
+    return `╔${lines.join("╦")}╗\n║${t.join("║")}║\n╠${lines.join("╬")}╣`;
+  }
+
+  getBody() {
+    const test = this.table.map(
+      item =>
+        `║${this.getColumns()
+          .map(col => String(item[col] || "-").padEnd(this.getPadConfig()[col]))
+          .join("║")}`
+    );
+    return `${test.join("║\n")}║`;
+  }
+
+  getFooter() {
+    const t = this.getColumns().map(i => i.padEnd(this.getPadConfig()[i]));
+    const lines = t.map(col => "═".repeat(col.length));
+    return `╚${lines.join("╩")}╝`;
+  }
+
+  getTable() {
+    return `${this.getHeader()}\n${this.getBody()}\n${this.getFooter()}`;
+  }
+
+  print() {
+    console.log(this.getTable());
+  }
+}
+
+module.exports = PrettyTable;
+
 const sampleData = [
   {
     name: "Any Name",
@@ -20,49 +80,6 @@ const sampleData = [
     place: "tiny"
   }
 ];
-const totalColumns = Array.from(
-  new Set(sampleData.reduce((acl, curr) => acl.concat(Object.keys(curr)), []))
-);
 
-// const transpose = columns.reduce(
-//   (acl, curr) =>
-//     Object.assign({}, acl, { [curr]: sampleData.map(i => i[curr]) }),
-//   {}
-// );
-
-const padConfig = totalColumns.reduce(
-  (acl, curr) =>
-    Object.assign({}, acl, {
-      [curr]: Math.max(
-        curr.length,
-        ...sampleData.map(i => (i[curr] ? String(i[curr]).length : 0))
-      )
-    }),
-  {}
-);
-
-const printHeader = columns => {
-  const t = columns.map(i => i.padEnd(padConfig[i]));
-  const lines = t.map(col => "═".repeat(col.length));
-  console.log(`╔${lines.join("╦")}╗`);
-  console.log(`║${t.join("║")}║`);
-  console.log(`╠${lines.join("╬")}╣`);
-};
-const printFooter = columns => {
-  const t = columns.map(i => i.padEnd(padConfig[i]));
-  const lines = t.map(col => "═".repeat(col.length));
-  console.log(`╚${lines.join("╩")}╝`);
-};
-const printBody = (columns, items) => {
-  const test = items.map(
-    item =>
-      `║${columns
-        .map(col => String(item[col] || "-").padEnd(padConfig[col]))
-        .join("║")}`
-  );
-  console.log(`${test.join("║\n")}║`);
-};
-
-printHeader(totalColumns);
-printBody(totalColumns, sampleData);
-printFooter(totalColumns);
+const table = new PrettyTable(sampleData);
+table.print();
