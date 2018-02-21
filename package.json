@@ -9,6 +9,24 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "example": "node ."
+    "example": "node .",
+    "prettify": "prettier \"*.js\" --write",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "precommit": "lint-staged"
+  },
+  "devDependencies": {
+    "eslint": "^4.18.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "lint-staged": "^6.1.1",
+    "prettier": "^1.10.2"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.js": ["eslint --max-warnings 0", "prettier --write", "git add"]
+    }
   }
 }
