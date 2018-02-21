@@ -1,3 +1,4 @@
+/* eslint no-console: OFF */
 const sampleData = [
   {
     name: "Any Name",
@@ -19,24 +20,26 @@ const sampleData = [
     place: "tiny"
   }
 ];
-const columns = Array.from(
+const totalColumns = Array.from(
   new Set(sampleData.reduce((acl, curr) => acl.concat(Object.keys(curr)), []))
 );
 
-const transpose = columns.reduce(
+// const transpose = columns.reduce(
+//   (acl, curr) =>
+//     Object.assign({}, acl, { [curr]: sampleData.map(i => i[curr]) }),
+//   {}
+// );
+
+const padConfig = totalColumns.reduce(
   (acl, curr) =>
-    Object.assign({}, acl, { [curr]: sampleData.map(i => i[curr]) }),
+    Object.assign({}, acl, {
+      [curr]: Math.max(
+        curr.length,
+        ...sampleData.map(i => (i[curr] ? String(i[curr]).length : 0))
+      )
+    }),
   {}
 );
-
-const padConfig = columns.reduce((acl, curr) => {
-  return Object.assign({}, acl, {
-    [curr]: Math.max(
-      curr.length,
-      ...sampleData.map(i => (i[curr] ? String(i[curr]).length : 0))
-    )
-  });
-}, {});
 
 const printHeader = columns => {
   const t = columns.map(i => i.padEnd(padConfig[i]));
@@ -53,16 +56,13 @@ const printFooter = columns => {
 const printBody = (columns, items) => {
   const test = items.map(
     item =>
-      "║" +
-      columns
+      `║${columns
         .map(col => String(item[col] || "-").padEnd(padConfig[col]))
-        .join("║")
+        .join("║")}`
   );
-  console.log(test.join("║\n") + "║");
+  console.log(`${test.join("║\n")}║`);
 };
 
-let t = 1;
-
-printHeader(columns);
-printBody(columns, sampleData);
-printFooter(columns);
+printHeader(totalColumns);
+printBody(totalColumns, sampleData);
+printFooter(totalColumns);
