@@ -1,5 +1,3 @@
-/* eslint no-console: OFF */
-
 class PrettyTable {
   constructor(init) {
     this.table = init;
@@ -53,33 +51,9 @@ class PrettyTable {
   }
 
   print() {
+    // eslint-disable-next-line
     console.log(this.getTable());
   }
 }
 
 module.exports = PrettyTable;
-
-const sampleData = [
-  {
-    name: "Any Name",
-    age: 29,
-    place: "Some Really Looooooooooooooooooong text",
-    tick: Date.now()
-  },
-  {
-    name: "Chronic Bachelor",
-    age: 9874,
-    place: "Average"
-  },
-  {
-    name: `Don't have any other props`
-  },
-  {
-    name: "Third Person",
-    age: 4,
-    place: "tiny"
-  }
-];
-
-const table = new PrettyTable(sampleData);
-table.print();

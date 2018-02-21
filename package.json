@@ -1,8 +1,8 @@
 {
   "name": "pretty-table",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description":
-    "A zero-dependant, nice little npm package that can print table to the console ",
+    "A nice little npm package with zero dependencies, that can print table to the console",
   "main": "index.js",
   "repository": "git@github.com:giridharangm/pretty-table.git",
   "author": "Giridharan GM",
